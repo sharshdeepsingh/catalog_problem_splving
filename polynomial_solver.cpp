@@ -51,28 +51,36 @@ long long lagrange_interpolation(const std::vector<std::pair<long long, long lon
 }
 
 int main() {
+    std::cout << "Program started." << std::endl;
+
     std::ifstream file("input.json");
     if (!file.is_open()) {
         std::cerr << "Failed to open input file." << std::endl;
         return 1;
     }
+    std::cout << "Successfully opened input.json" << std::endl;
 
     json input;
     try {
         file >> input;
+        std::cout << "Successfully parsed JSON" << std::endl;
     } catch (json::parse_error& e) {
         std::cerr << "JSON parsing error: " << e.what() << std::endl;
         return 1;
     }
 
     int k = input["keys"]["k"];
+    std::cout << "k = " << k << std::endl;
+
     std::vector<std::pair<long long, long long>> points;
 
     for (int i = 1; points.size() < k && i <= input["keys"]["n"]; i++) {
         if (input.contains(std::to_string(i))) {
             auto point = input[std::to_string(i)];
             int base = std::stoi(point["base"].get<std::string>());
-            points.emplace_back(i, to_decimal(point["value"], base));
+            long long y = to_decimal(point["value"], base);
+            points.emplace_back(i, y);
+            std::cout << "Added point: (" << i << ", " << y << ")" << std::endl;
         }
     }
 
@@ -81,6 +89,9 @@ int main() {
         return 1;
     }
 
-    std::cout << lagrange_interpolation(points) << std::endl;
+    std::cout << "Calculating result..." << std::endl;
+    long long result = lagrange_interpolation(points);
+    std::cout << "Result: " << result << std::endl;
+
     return 0;
 }

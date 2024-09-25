@@ -1,0 +1,16 @@
+   name: Run C++ Code
+
+   on: [push, pull_request]
+
+   jobs:
+     build-and-run:
+       runs-on: ubuntu-latest
+
+       steps:
+       - uses: actions/checkout@v2
+
+       - name: Compile C++ code
+         run: g++ -std=c++11 polynomial_solver.cpp -o polynomial_solver -I.
+
+       - name: Run the program
+         run: ./polynomial_solver
